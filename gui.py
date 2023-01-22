@@ -6,7 +6,7 @@
 #
 # camelCase used to maintain uniformity w/PyQt
 #
-# v 0.2
+# v 0.2.2
 #
 # Free for non-commercial use
 
@@ -45,7 +45,6 @@ from PyQt6.QtWidgets import (
 	QHBoxLayout,
 	QLineEdit, 
 	QPushButton,
-	QLabel,
 	QWidget
 	)
 
@@ -60,7 +59,6 @@ class UrlFilenameGUI:
 		self.okButtonEnabled = False
 		self.clearInputButtonEnabled = False
 		self.__isFilenameInputEmpty = True
-		self.__isUiEnabled = True
 
 		# Data variables ;)
 		self.url = None
@@ -80,7 +78,6 @@ class UrlFilenameGUI:
 		formLayout.addRow(PASTE_URL_LABEL, urlLineEdit)
 
 		self.urlLineEdit = urlLineEdit
-
 
 		destinationFilenameLineEdit = QLineEdit()
 		destinationFilenameLineEdit.placeholderText = ENTER_DESTINATION_FILENAME_LABEL
@@ -120,7 +117,7 @@ class UrlFilenameGUI:
 
 
 	@property
-	def valid_input_present(self) -> bool:
+	def validInputPresent(self) -> bool:
 
 		return bool(
 			self.url and
@@ -129,12 +126,13 @@ class UrlFilenameGUI:
 
 	@property
 	def filename(self):
-
-		# If a user was generous, just use the value they provided
+		
+		# If user was generous, just use the value they provided
 		if self.__filename:
 			base_filename = self.__filename
+
+		# Otherwise, generate a default
 		else:
-			# Otherwise, generate a default
 			from datetime import datetime
 			now = datetime.now().strftime(f"%Y-%m-%d %H{DEFAULT_FILENAME_TIMESTAMP_SECONDS_SEPARATOR}%M{DEFAULT_FILENAME_TIMESTAMP_SECONDS_SEPARATOR}%S")
 
@@ -167,9 +165,9 @@ class UrlFilenameGUI:
 			# Otherwise, let routines determine the restoration state
 
 		# Ok button is enabled when valid data is present
-		self.okButtonEnabled = updateButtonIfNeeded(self.valid_input_present, self.okButtonEnabled, self.okButton)
+		self.okButtonEnabled = updateButtonIfNeeded(self.validInputPresent, self.okButtonEnabled, self.okButton)
 
-		# If there's any user input, we have soemthing to clear
+		# If there's any user input, we have something to clear
 		haveSomethingToClear = len(self.urlLineEdit.text()) > 0 or len(self.destinationFilenameLineEdit.text()) > 0
 		self.clearInputButtonEnabled = updateButtonIfNeeded(haveSomethingToClear, self.clearInputButtonEnabled, self.clearInputButton)
 
@@ -189,7 +187,7 @@ class UrlFilenameGUI:
 
 	def destinationFilenameLineEditTextChanged(self, userInputText: str):
 
-		def filename_is_valid(filename: str):
+		def filenameIsValid(filename: str):
 			return self.filenameFormatValidator(filename) if self.filenameFormatValidator else True
 		
 		inputPresent = len(userInputText) > 0
@@ -201,7 +199,7 @@ class UrlFilenameGUI:
 		# inputIsEmpty = not inputPresent # Uncomment this line to treat spaces as non-empty input
 		self.__isFilenameInputEmpty = inputIsEmpty
 
-		self.__filename = text if not inputIsEmpty and filename_is_valid(text) else None
+		self.__filename = text if not inputIsEmpty and filenameIsValid(text) else None
 		
 		self.updateUI()
 
