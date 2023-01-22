@@ -197,11 +197,11 @@ class UrlFilenameGUI:
 		text = userInputText.strip()
 		textPresent = len(text) > 0
 		
-		input_is_empty = not textPresent # Uncomment this line to disregard spaces at all
-		# input_is_empty = not inputPresent # Uncomment this line to treat spaces as non-empty input
-		self.__isFilenameInputEmpty = input_is_empty
+		inputIsEmpty = not textPresent # Uncomment this line to disregard spaces at all
+		# inputIsEmpty = not inputPresent # Uncomment this line to treat spaces as non-empty input
+		self.__isFilenameInputEmpty = inputIsEmpty
 
-		self.__filename = text if not input_is_empty and filename_is_valid(text) else None
+		self.__filename = text if not inputIsEmpty and filename_is_valid(text) else None
 		
 		self.updateUI()
 
